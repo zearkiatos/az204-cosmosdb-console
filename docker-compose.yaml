@@ -1,0 +1,12 @@
+services:
+  console:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    working_dir: /app
+    container_name: "az204-cosmosdb-console"
+    volumes:
+      - .:/app
+    tty: true
