@@ -100,7 +100,7 @@ $ . ./run.sh; podman-up
 $ . ./run.sh; docker-down
 ```
 
-## Direct with docker 🦭
+## Direct with podman 🦭
 
 ```sh
 $ podman up --build
