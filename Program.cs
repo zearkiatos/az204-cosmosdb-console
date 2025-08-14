@@ -67,4 +67,3 @@ public static class Program
         Console.WriteLine($"Item creado con id: {response.Resource.id}");
     }
 }
-}
