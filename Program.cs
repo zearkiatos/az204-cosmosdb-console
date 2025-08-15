@@ -16,14 +16,11 @@ public static class Program
     {
         try
         {
-            // Inicializar el cliente de Cosmos DB.
             cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
 
-            // Crear la base de datos y el contenedor.
             await CreateDatabaseAsync();
             await CreateContainerAsync();
 
-            // Crear un documento.
             await AddItemsToContainerAsync();
         }
         catch (CosmosException ex)
@@ -43,27 +40,26 @@ public static class Program
     {
         // Crear una nueva base de datos si no existe.
         database = await cosmosClient.CreateDatabaseIfNotExistsAsync(databaseId);
-        Console.WriteLine($"Base de datos '{database.Id}' creada.");
+        Console.WriteLine($"Database '{database.Id}' created.");
     }
 
     private static async Task CreateContainerAsync()
     {
-        // Crear un nuevo contenedor en la base de datos si no existe.
-        container = await database.CreateContainerIfNotExistsAsync(containerId, "/id");
-        Console.WriteLine($"Container '{container.Id}' creado.");
+        container = await database.CreateContainerIfNotExistsAsync(containerId, "/details");
+        Console.WriteLine($"Container '{container.Id}' created.");
     }
 
     private static async Task AddItemsToContainerAsync()
     {
-        // Crear un documento.
+        var itemId = Guid.NewGuid().ToString();
         var item = new
         {
-            id = Guid.NewGuid().ToString(),
-            nomprod = "techo"
+            id = itemId,
+            product_name = "roof",
+            details = itemId  // Add the details property that matches the partition key path
         };
 
-        // Insertar el documento en el contenedor.
-        var response = await container.CreateItemAsync(item, new PartitionKey(item.id));
-        Console.WriteLine($"Item creado con id: {response.Resource.id}");
+        var response = await container.CreateItemAsync(item, new PartitionKey(item.details));
+        Console.WriteLine($"Item created with id: {response.Resource.id}");
     }
 }
