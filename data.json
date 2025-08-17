@@ -1,0 +1,17 @@
+[
+    {
+        "id": "e7a1c9b2-4f8a-4b7a-9c2e-8d3f6a1b2c3d",
+        "details": "1",
+        "product_name": "roof"
+    },
+    {
+        "id": "a5c3e2d1-7b8f-4a6e-9d2c-3f1e5b6a7c8d",
+        "details": "2",
+        "product_name": "wall"
+    },
+    {
+        "id": "b3f2a8d4-9c7e-4e1b-8f2a-7d6e5c4b3a2f",
+        "details": "3",
+        "product_name": "floor"
+    }
+]

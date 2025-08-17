@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.IO;
 using Microsoft.Azure.Cosmos;
 using Configuration;
+using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 public static class Program
 {
     private static readonly string EndpointUri = AppConfiguration.CosmosDbBaseEndpointUrl;
@@ -22,6 +25,8 @@ public static class Program
             await CreateContainerAsync();
 
             await AddItemsToContainerAsync();
+
+            await AddItemsToContainerFromJsonAsync("data.json");
         }
         catch (CosmosException ex)
         {
@@ -56,10 +61,28 @@ public static class Program
         {
             id = itemId,
             product_name = "roof",
-            details = itemId  // Add the details property that matches the partition key path
+            details = itemId
         };
 
         var response = await container.CreateItemAsync(item, new PartitionKey(item.details));
         Console.WriteLine($"Item created with id: {response.Resource.id}");
+    }
+
+    private static async Task AddItemsToContainerFromJsonAsync(string jsonFilePath)
+    {
+        await LoadJsonAsync(jsonFilePath);
+        Console.WriteLine("Upload Json completed.");
+    }
+
+    private static async Task LoadJsonAsync(string jsonFilePath)
+    {
+        string jsonContent = await File.ReadAllTextAsync(jsonFilePath);
+        JArray jsonArray = JArray.Parse(jsonContent);
+
+        foreach (JObject jsonObject in jsonArray)
+        {
+            await container.CreateItemAsync(jsonObject, new PartitionKey(jsonObject["details"].ToString()));
+            Console.WriteLine($"Object details inserted with id {jsonObject["id"]}");
+        }
     }
 }
